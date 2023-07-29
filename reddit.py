@@ -68,7 +68,7 @@ class RedditFunc():
             template_id = template_id["flair_template_id"]
         else:
             print(
-                "Failed to find flair named %s. Attempting to post without flair" % flairname)
+                f"Failed to find flair named {flairname}. Attempting to post without flair")
             template_id = None
 
         if parent is None:
