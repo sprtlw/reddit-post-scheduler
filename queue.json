@@ -1,16 +1,18 @@
 {
   "posts": [
     {
-      "sub": "test",
+      "sub": "sydling",
       "title": "test1",
-      "image": "C:/example/path.png",
-      "post_time": "07/28/2023, 22:49"
+      "flairname": "test",
+      "link": "https://imgur.com",
+      "post_time": "07/29/2023, 14:10"
     },
     {
-      "sub": "test",
+      "sub": "sydling",
       "title": "test2",
-      "image": "C:/example/path2.png",
-      "post_time": "07/28/2023, 22:50"
+      "image": "C:/Users/Sam/Downloads/20230723_203740.jpg",
+      "flairname": "test",
+      "post_time": "07/29/2023, 14:11"
     }
   ]
 }

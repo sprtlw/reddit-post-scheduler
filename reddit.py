@@ -53,26 +53,39 @@ class RedditFunc():
     # update datetime
     now = datetime.datetime.now()
 
-    def submit_post(self, sub, title, text, link, image, video, parent, flairid, flairtext, collectionid, sort, commenttext, post_time, spoiler, nsfw, lock, contest, dontnotify, distinguish, sticky, lockcomment, distinguishcomment, stickycomment, wait):
+    def submit_post(self, sub, title, text, link, image, video, parent, flairname, flairtext, collectionid, sort, commenttext, post_time, spoiler, nsfw, lock, contest, dontnotify, distinguish, sticky, lockcomment, distinguishcomment, stickycomment, wait):
         current_date = str(self.now.strftime("%m/%d/%Y, %H:%M"))
 
         if post_time != current_date:
             return 1
 
+        # flair name to id
+        choices = list(self.reddit.subreddit(
+            sub).flair.link_templates.user_selectable())
+        template_id = next(
+            (x for x in choices if x["flair_text"] == flairname), None)
+        if template_id is not None:
+            template_id = template_id["flair_template_id"]
+        else:
+            print(
+                "Failed to find flair named %s. Attempting to post without flair" % flairname)
+            template_id = None
+
         if parent is None:
             try:
                 if image is None and video is None:
-                    submission = self.reddit.subreddit(sub).submit(title, selftext=text, url=link, flair_id=flairid, flair_text=flairtext, send_replies=not (
+                    submission = self.reddit.subreddit(sub).submit(title, selftext=text, url=link, flair_id=template_id, flair_text=flairtext, send_replies=not (
                         dontnotify), nsfw=nsfw, spoiler=spoiler, collection_id=collectionid)
                 else:
                     if video is None:
-                        submission = self.reddit.subreddit(sub).submit_image(title, image_path=image, flair_id=flairid, flair_text=flairtext, send_replies=not (
+                        submission = self.reddit.subreddit(sub).submit_image(title, image_path=image, flair_id=template_id, flair_text=flairtext, send_replies=not (
                             dontnotify), nsfw=nsfw, spoiler=spoiler, collection_id=collectionid)
                     else:
-                        submission = self.reddit.subreddit(sub).submit_video(title, video_path=video, thumbnail_path=image, flair_id=flairid,
+                        submission = self.reddit.subreddit(sub).submit_video(title, video_path=video, thumbnail_path=image, flair_id=template_id,
                                                                              flair_text=flairtext, send_replies=not (dontnotify), nsfw=nsfw, spoiler=spoiler, collection_id=collectionid)
 
-                print(f"Posted {to_link(submission.permalink)}")
+                print(
+                    f"Posted {to_link(submission.permalink)} at {current_date}")
 
             except APIException as e:
                 if e.field == "ratelimit":
